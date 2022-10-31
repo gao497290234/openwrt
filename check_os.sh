@@ -9,21 +9,20 @@ check_passwd(){
 			sleep 2
 	else
 	        echo "密码正确"
-			echo "正在检测系统"
-			sleep 0.5
-			if [ "$os"=="openwrt"];then
-				right_file='/root/openwrt.txt'
-				echo "${1}密码正确,已连接"
-				out_file $right_file ${1} ${2} ${3}
-				echo "已将系统为openwrt的ip导入到$right_file中"
-				sleep 2
-			else
-				right_file='/root/other.txt'
-				echo "${1}密码正确,已连接"
-				out_file $right_file ${1} ${2} ${3}
-				echo "这个可能是正经机器已将ip导入到$right_file中"
-				sleep 2
-			fi
+		echo "正在检测系统"
+		sleep 0.5
+		if [ "$os"=="openwrt"];then
+			right_file='/root/openwrt.txt'
+			out_file $right_file ${1} ${2} ${3}
+			echo "已将系统为openwrt的ip导入到"$right_file"中"
+			sleep 2
+		else
+			right_file='/root/other.txt'
+			echo "${1}""密码正确,已连接"
+			out_file $right_file ${1} ${2} ${3}
+			echo "这个可能是正经机器已将ip导入到$right_file中"
+			sleep 2
+		fi
 	fi
 }	
 check_os(){
@@ -32,6 +31,7 @@ check_os(){
 		echo "openwrt"
 	else
 		echo "other"
+	fi
 }
 
 check_all(){
@@ -49,7 +49,6 @@ check_all(){
 }
 change_passwd(){
 	echo -e "Ync342015n\nYnc342015n" | (passwd root)
-	Password for root changed by root
 }
 	
 out_file(){
