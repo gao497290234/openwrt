@@ -50,7 +50,19 @@ check_all(){
 	done
 }
 change_passwd(){
-	echo -e "Ync342015n\nYnc342015n" | (passwd root)
+	for((i=1;i<=$num;i++));  
+	do 	
+		echo "正在为第 $i 台改密码"
+		set +e
+		address=$(sed -n "$i, 1p" $input_file | awk -F, '{print $1;}')
+		username=$(sed -n "$i, 1p" $input_file | awk -F, '{print $2;}')
+		passwd=$(sed -n "$i, 1p" $input_file | awk -F, '{print $3;}')
+		sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "echo -e 'Ync342015n\nYnc342015n' | (passwd root)"
+		echo "已将密码改为Ync342015n"
+		sleep 0.5
+		clear
+	done
+	
 }
 	
 out_file(){
