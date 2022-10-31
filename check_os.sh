@@ -1,6 +1,5 @@
 check_passwd(){
 	timeout 3s sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n"&&test_connect=$(sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
-	os=check_os $test_connect
 	if [ ! $test_connect ]; then
 		error_file='/root/error_server.txt'
 	        echo "${1}密码错误,无法连接"
@@ -8,9 +7,11 @@ check_passwd(){
 			echo "已将密码错误的ip导入到"$error_file"中"
 			sleep 2
 	else
+		os=$(check_os $test_connect)
 	        echo "密码正确"
 		echo "正在检测系统"
 		sleep 0.5
+		echo $os
 		if [ "$os"=="openwrt"];then
 			right_file='/root/openwrt.txt'
 			out_file $right_file ${1} ${2} ${3}
