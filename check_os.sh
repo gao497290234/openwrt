@@ -1,41 +1,41 @@
 check_passwd(){
-	test_connect=$(sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
+	timeout 3s sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n"&&test_connect=$(sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
 	os=check_os $test_connect
 	if [ ! $test_connect ]; then
-			error_file='/root/error_server.txt'
+		error_file='/root/error_server.txt'
 	        echo "${1}密码错误,无法连接"
 			out_file $error_file ${1} ${2} ${3}
-			echo "已将密码错误的ip导入到$error_file中"
-			sleep 0.5
+			echo "已将密码错误的ip导入到"$error_file"中"
+			sleep 2
 	else
 	        echo "密码正确"
 			echo "正在检测系统"
 			sleep 0.5
-			if[ "$os"=="openwrt"];then
+			if [ "$os"=="openwrt"];then
 				right_file='/root/openwrt.txt'
 				echo "${1}密码正确,已连接"
 				out_file $right_file ${1} ${2} ${3}
 				echo "已将系统为openwrt的ip导入到$right_file中"
-				sleep 0.5
+				sleep 2
 			else
 				right_file='/root/other.txt'
 				echo "${1}密码正确,已连接"
 				out_file $right_file ${1} ${2} ${3}
 				echo "这个可能是正经机器已将ip导入到$right_file中"
-				sleep 0.5
+				sleep 2
 			fi
 	fi
 }	
 check_os(){
 	#os=test_connect=$(sshpass -p "61.74.224.26" ssh root@Ync342015n -o StrictHostKeyChecking=no "uname -n")
-	if["${1}" == "KSNW_VPN_Server"||"$os" == "Server"]; then
+	if ["${1}" == "KSNW_VPN_Server"||"$os" == "Server"]; then
 		echo "openwrt"
 	else
 		echo "other"
 }
 
 check_all(){
-	 for((i=1;i<=$num;i++));  
+	for((i=1;i<=$num;i++));  
 	do 	
 		echo "检测第 $i 台"
 		set +e
