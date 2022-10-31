@@ -1,4 +1,5 @@
 check_passwd(){
+	test_connect=""
 	timeout 3s sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n"&&test_connect=$(sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
 	if [ ! $test_connect ]; then
 		error_file='/root/error_server.txt'
@@ -12,7 +13,7 @@ check_passwd(){
 		echo "正在检测系统"
 		sleep 0.5
 		echo $os
-		if [ "$os"=="openwrt"];then
+		if [ $os=="openwrt" ];then
 			right_file='/root/openwrt.txt'
 			out_file $right_file ${1} ${2} ${3}
 			echo "已将系统为openwrt的ip导入到"$right_file"中"
