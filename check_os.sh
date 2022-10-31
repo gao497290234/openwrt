@@ -28,7 +28,7 @@ check_passwd(){
 }	
 check_os(){
 	#os=test_connect=$(sshpass -p "61.74.224.26" ssh root@Ync342015n -o StrictHostKeyChecking=no "uname -n")
-	if ["${1}" == "KSNW_VPN_Server"||"$os" == "Server"]; then
+	if [ "${1}" == "KSNW_VPN_Server" -o "$os" == "Server" ]; then
 		echo "openwrt"
 	else
 		echo "other"
