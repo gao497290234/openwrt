@@ -52,16 +52,30 @@ change_passwd(){
 	for((i=1;i<=$num;i++));  
 	do 	
 		echo "正在为第 $i 台改密码"
+		check_changed=""
 		set +e
 		address=$(sed -n "$i, 1p" $input_file | awk -F, '{print $1;}')
 		username=$(sed -n "$i, 1p" $input_file | awk -F, '{print $2;}')
 		passwd=$(sed -n "$i, 1p" $input_file | awk -F, '{print $3;}')
-		sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "echo -e 'Ync342015n\nYnc342015n' | (passwd root)"
-		echo "已将密码改为Ync342015n"
+		timeout 3s sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "echo -e 'Ync342015n\nYnc342015n' | (passwd root)"&&check_changed=$(sshpass -p "Ync342015n" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
+		if [ "$check_changed" != "" ]; then
+			echo "已将密码改为Ync342015n"
+		else
+			echo "密码可能没有改变"
+		fi
 		sleep 0.5
 		clear
 	done
 	
+}
+check_wget(){
+	timeout 3s sshpass -p "Ync342015n" ssh root@175.212.159.214 -o StrictHostKeyChecking=no "uname -n"&&a=$(sshpass -p "Ync342015n" ssh root@175.212.159.214 -o StrictHostKeyChecking=no "cd /tmp&&rm -f test.txt&&wget http://141.164.59.56/test.txt&&cat test.txt")
+	echo $a
+	if [ "$a" == "" ]; then
+        	echo "wget正常，此台机器运行环境正常"
+	else
+        	echo "wget可能未安装，此机器无法下载脚本"
+	fi
 }
 	
 out_file(){
