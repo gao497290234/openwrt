@@ -59,9 +59,14 @@ change_passwd(){
 		passwd=$(sed -n "$i, 1p" $input_file | awk -F, '{print $3;}')
 		timeout 3s sshpass -p "${3}" ssh ${2}@${1} -o StrictHostKeyChecking=no "echo -e 'Ync342015n\nYnc342015n' | (passwd root)"&&check_changed=$(sshpass -p "Ync342015n" ssh ${2}@${1} -o StrictHostKeyChecking=no "uname -n")
 		if [ "$check_changed" != "" ]; then
+			change_pad='Ync342015n'
+			have_changed_file='/root/passwd_changed.txt'
+			out_file $have_changed_file ${1} ${2} $change_psd
 			echo "已将密码改为Ync342015n"
 		else
 			echo "密码可能没有改变"
+			no_change_file='/root/passwd_no_change.txt'
+			out_file $no_changed_file ${1} ${2} ${3}
 		fi
 		sleep 0.5
 		clear
@@ -77,6 +82,8 @@ check_wget(){
         	echo "wget可能未安装，此机器无法下载脚本"
 	fi
 }
+cleat_disk(){
+	
 	
 out_file(){
 	cat >> ${1} << EOF
@@ -101,8 +108,9 @@ echo
 echo
 echo
 echo "您需要做些什么"
-echo "1 检测密码是否正确并进行系统分类"
+echo "1 检测能否连接并进行系统分类"
 echo "2 批量更改密码"
+echo "3 检测服务器运行环境"
 read -p "输入选项:" check_num
 if ((check_num==1));
 then
@@ -110,6 +118,9 @@ then
 elif((check_num==2));
 then
 	change_passwd
+elif((check_num==3));
+then
+	check_wget
 else
 	echo "输入不符合规范 请重新运行脚本"
 fi
